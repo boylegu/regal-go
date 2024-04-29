@@ -32,3 +32,10 @@ func withSchedule(s int) ParamOption {
 		o.schedule = s
 	})
 }
+
+func defaultParams() paramOption {
+	return paramOption{
+		combine:  1,
+		schedule: 1,
+	}
+}
