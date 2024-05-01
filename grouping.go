@@ -10,7 +10,7 @@ type baseInfo struct {
 	params      paramOption
 }
 
-func (b *baseInfo) grouping() string {
+func (b *baseInfo) Grouping() string {
 	vHost := b.initialize()
 	b.calculate(vHost)
 	return ""
@@ -29,13 +29,14 @@ func (b *baseInfo) initialize() [][]interface{} {
 
 func (b *baseInfo) calculate(vHost [][]interface{}) {
 	var baselist [][]interface{}
-
 	for hostIndex, value := range vHost {
-		hosts := value[1].([][]string)[1][b.params.schedule:]
+		hosts := value[1].([]string)[b.params.schedule:]
 		baselist = append(baselist, []interface{}{value[0], [][]string{}})
-		initHost := strings.Join(value[1].([][]string)[1][:b.params.schedule], ", ")
+		initHost := strings.Join(value[1].([]string)[:b.params.schedule], ", ")
+		fmt.Println(hosts, initHost, baselist)
 		fmt.Println(recursiveGrouping(hosts, baselist, initHost, b.params.combine, hostIndex))
 	}
+	fmt.Println(baselist)
 }
 
 func pop(items []string) (string, []string) {
