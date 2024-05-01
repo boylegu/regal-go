@@ -21,13 +21,13 @@ func newFuncOption(f func(*paramOption)) *funcOption {
 	return &funcOption{f: f}
 }
 
-func withCombine(s int) ParamOption {
+func WithCombine(s int) ParamOption {
 	return newFuncOption(func(o *paramOption) {
 		o.combine = s
 	})
 }
 
-func withSchedule(s int) ParamOption {
+func WithSchedule(s int) ParamOption {
 	return newFuncOption(func(o *paramOption) {
 		o.schedule = s
 	})
