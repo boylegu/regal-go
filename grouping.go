@@ -1,57 +1,56 @@
 package regal
 
 import (
-	"fmt"
 	"strings"
 )
+
+type regalList [][]interface{}
 
 type baseInfo struct {
 	versionHost map[string]string
 	params      paramOption
 }
 
-func (b *baseInfo) Grouping() string {
+func (b *baseInfo) Grouping() regalList {
 	vHost := b.initialize()
-	b.calculate(vHost)
-	return ""
+	return b.calculate(vHost)
 }
 
-func (b *baseInfo) initialize() [][]interface{} {
-	var l [][]interface{}
+func (b *baseInfo) initialize() regalList {
+	var l regalList
 
 	for version, host := range b.versionHost {
 		ipList := strings.Split(host, ",")
 		l = append(l, []interface{}{version, ipList})
-
 	}
 	return l
 }
 
-func (b *baseInfo) calculate(vHost [][]interface{}) {
-	var baselist [][]interface{}
+func (b *baseInfo) calculate(vHost regalList) regalList {
+	var baselist regalList
 	for hostIndex, value := range vHost {
 		hosts := value[1].([]string)[b.params.schedule:]
 		baselist = append(baselist, []interface{}{value[0], [][]string{}})
 		initHost := strings.Join(value[1].([]string)[:b.params.schedule], ", ")
-		fmt.Println(hosts, initHost, baselist)
-		fmt.Println(recursiveGrouping(hosts, baselist, initHost, b.params.combine, hostIndex))
+		recursiveGrouping(hosts, baselist, initHost, b.params.combine, hostIndex)
 	}
-	fmt.Println(baselist)
+	return baselist
 }
 
-func pop(items []string) (string, []string) {
-	length := len(items)
-	popitem := items[length-1]
-	items = items[:length-1]
-	return popitem, items
-
+func Pop(items []string) (string, []string) {
+	i := len(items) - 1
+	popItem := items[i]
+	items[i] = popItem
+	items[len(items)-1] = ""
+	items = items[:len(items)-1]
+	return popItem, items
 }
 
-func recursiveGrouping(hosts []string, baselist [][]interface{}, init_host string, combine, hostindex int) int {
+func recursiveGrouping(hosts []string, baselist regalList, init_host string, combine, hostindex int) int {
 	var grouping func(int) int
 	var init_n int
 	var popitem string
-	baselist[0][1] = [][]string{{init_host}}
+	baselist[hostindex][1] = [][]string{{init_host}}
 
 	grouping = func(init_n int) int {
 		f_count := init_n + 1
@@ -59,11 +58,14 @@ func recursiveGrouping(hosts []string, baselist [][]interface{}, init_host strin
 		if len(hosts) == 0 {
 			return 0
 		}
-		baselist[0][1] = append(baselist[0][1].([][]string), []string{})
+		baselist[hostindex][1] = append(baselist[hostindex][1].([][]string), []string{})
 		for i := 1; i <= combine; i++ {
-			popitem, hosts = pop(hosts)
-			baselist[0][1].([][]string)[f_count] = append(baselist[0][1].([][]string)[f_count], popitem)
-
+			defer func() {
+				if r := recover(); r != nil {
+				}
+			}()
+			popitem, hosts = Pop(hosts)
+			baselist[hostindex][1].([][]string)[f_count] = append(baselist[hostindex][1].([][]string)[f_count], popitem)
 		}
 		return grouping(f_count)
 	}
