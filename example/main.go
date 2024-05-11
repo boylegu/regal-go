@@ -26,7 +26,6 @@ func main() {
 		regal.WithCombine(3),
 		regal.WithSchedule(2),
 	)
-	//fmt.Println(c2.Grouping())
 	for k, v := range c2.Grouping() {
 		fmt.Println(k, v)
 	}

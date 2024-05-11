@@ -1,10 +1,36 @@
 package regal
 
 import (
+	"fmt"
 	"strings"
 )
 
 type regalList [][]interface{}
+
+type Converter interface {
+	ConvertByOneSlice(i interface{}) ([]string, error)
+	ConvertByDyadicSlice(i interface{}) ([][]string, error)
+}
+
+type InfaceToSliceConverter struct{}
+
+func (c InfaceToSliceConverter) ConvertByOneSlice(i interface{}) ([]string, error) {
+	switch v := i.(type) {
+	case []string:
+		return v, nil
+	default:
+		return nil, fmt.Errorf("unsupported type: %T", i)
+	}
+}
+
+func (c InfaceToSliceConverter) ConvertByDyadicSlice(i interface{}) ([][]string, error) {
+	switch v := i.(type) {
+	case [][]string:
+		return v, nil
+	default:
+		return nil, fmt.Errorf("unsupported type: %T", i)
+	}
+}
 
 type baseInfo struct {
 	versionHost map[string]string
@@ -18,7 +44,6 @@ func (b *baseInfo) Grouping() regalList {
 
 func (b *baseInfo) initialize() regalList {
 	var l regalList
-
 	for version, host := range b.versionHost {
 		ipList := strings.Split(host, ",")
 		l = append(l, []interface{}{version, ipList})
@@ -27,14 +52,20 @@ func (b *baseInfo) initialize() regalList {
 }
 
 func (b *baseInfo) calculate(vHost regalList) regalList {
-	var baselist regalList
-	for hostIndex, value := range vHost {
-		hosts := value[1].([]string)[b.params.schedule:]
-		baselist = append(baselist, []interface{}{value[0], [][]string{}})
-		initHost := strings.Join(value[1].([]string)[:b.params.schedule], ", ")
-		recursiveGrouping(hosts, baselist, initHost, b.params.combine, hostIndex)
+	var c Converter = InfaceToSliceConverter{}
+
+	baselist := make(regalList, len(vHost))
+	baselistPtr := &baselist
+
+	for hostindex := 0; hostindex < len(vHost); hostindex++ {
+		// hosts := vHost[hostindex][1].([]string)[b.params.schedule:]
+		convertToSlice, _ := c.ConvertByOneSlice(vHost[hostindex][1])
+		hosts := convertToSlice[b.params.schedule:]
+		(*baselistPtr)[hostindex] = []interface{}{vHost[hostindex][0], [][]string{}}
+		initHost := strings.Join(convertToSlice[:b.params.schedule], ", ")
+		recursiveGrouping(hosts, &baselist, b, initHost, hostindex)
 	}
-	return baselist
+	return *baselistPtr
 }
 
 func Pop(items []string) (string, []string) {
@@ -46,11 +77,13 @@ func Pop(items []string) (string, []string) {
 	return popItem, items
 }
 
-func recursiveGrouping(hosts []string, baselist regalList, init_host string, combine, hostindex int) int {
+func recursiveGrouping(hosts []string, baselist *regalList, b *baseInfo, init_host string, hostindex int) int {
 	var grouping func(int) int
 	var init_n int
 	var popitem string
-	baselist[hostindex][1] = [][]string{{init_host}}
+	var c Converter = InfaceToSliceConverter{}
+
+	(*baselist)[hostindex][1] = [][]string{{init_host}}
 
 	grouping = func(init_n int) int {
 		f_count := init_n + 1
@@ -58,14 +91,17 @@ func recursiveGrouping(hosts []string, baselist regalList, init_host string, com
 		if len(hosts) == 0 {
 			return 0
 		}
-		baselist[hostindex][1] = append(baselist[hostindex][1].([][]string), []string{})
-		for i := 1; i <= combine; i++ {
+
+		convertToSlice, _ := c.ConvertByDyadicSlice((*baselist)[hostindex][1])
+		(*baselist)[hostindex][1] = append(convertToSlice, []string{})
+		for i := 1; i <= b.params.combine; i++ {
 			defer func() {
 				if r := recover(); r != nil {
 				}
 			}()
 			popitem, hosts = Pop(hosts)
-			baselist[hostindex][1].([][]string)[f_count] = append(baselist[hostindex][1].([][]string)[f_count], popitem)
+			convertToSlice, _ = c.ConvertByDyadicSlice((*baselist)[hostindex][1])
+			convertToSlice[f_count] = append(convertToSlice[f_count], popitem)
 		}
 		return grouping(f_count)
 	}
