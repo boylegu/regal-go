@@ -1,8 +1,13 @@
 package regal
 
-func RegalEngine(versionHost map[string]string, params ...ParamOption) *baseInfo {
+func RegalEngine(versionHost [][]string, params ...ParamOption) *baseInfo {
+	m := NewOrderedMap[string, string]()
+	for i := 0; i < len(versionHost); i++ {
+		m.Set(versionHost[i][0], versionHost[i][1])
+	}
+
 	bi := &baseInfo{
-		versionHost: versionHost,
+		versionHost: m,
 		params:      defaultParams(),
 	}
 

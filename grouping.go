@@ -5,8 +5,6 @@ import (
 	"strings"
 )
 
-type regalList [][]interface{}
-
 type Converter interface {
 	ConvertByOneSlice(i interface{}) ([]string, error)
 	ConvertByDyadicSlice(i interface{}) ([][]string, error)
@@ -32,8 +30,10 @@ func (c InfaceToSliceConverter) ConvertByDyadicSlice(i interface{}) ([][]string,
 	}
 }
 
+type regalList [][]interface{}
+
 type baseInfo struct {
-	versionHost map[string]string
+	versionHost *OrderedMap[string, string]
 	params      paramOption
 }
 
@@ -44,9 +44,10 @@ func (b *baseInfo) Grouping() regalList {
 
 func (b *baseInfo) initialize() regalList {
 	var l regalList
-	for version, host := range b.versionHost {
-		ipList := strings.Split(host, ",")
-		l = append(l, []interface{}{version, ipList})
+
+	for el := b.versionHost.Front(); el != nil; el = el.Next() {
+		ipList := strings.Split(el.Value, ",")
+		l = append(l, []interface{}{el.Key, ipList})
 	}
 	return l
 }
@@ -58,7 +59,6 @@ func (b *baseInfo) calculate(vHost regalList) regalList {
 	baselistPtr := &baselist
 
 	for hostindex := 0; hostindex < len(vHost); hostindex++ {
-		// hosts := vHost[hostindex][1].([]string)[b.params.schedule:]
 		convertToSlice, _ := c.ConvertByOneSlice(vHost[hostindex][1])
 		hosts := convertToSlice[b.params.schedule:]
 		(*baselistPtr)[hostindex] = []interface{}{vHost[hostindex][0], [][]string{}}
