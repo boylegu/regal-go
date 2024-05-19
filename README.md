@@ -1,8 +1,50 @@
-regal-go
-=====
+<div align="center">
 
-Golang版用于"灰度发布"或 A/B Testing的智能分组引擎
+<h1 style="border-bottom: none">
+    <b>Regal-Go</b><br />
+</h1>
+<p>
+The smart grouping engine for A/B Testing or Gray release by Golang.
+</p>
+
+[![go](https://img.shields.io/badge/Go-1.18+-66C9D6)]()
+[![ver](https://img.shields.io/badge/version-1.0.0-66C9D6)]()
+[![Maintainability](https://api.codeclimate.com/v1/badges/4c478e05a95251b6a818/maintainability)](https://codeclimate.com/github/boylegu/regal-go/maintainability)
+[![go](https://img.shields.io/badge/license-MIT-E940AF)]()
 
 <p align="center">
 <img src="https://github.com/boylegu/regal-go/blob/main/image/regal-white.png?raw=true" width="330" height="300">
 </p>
+</div>
+
+English | [简体中文] | [Regal by Python]
+
+## what's Ragal-Go
+
+For a simple example, let's say you need to do a staged rollout for a particular version  or several, which could be a bunch of server clusters, as shown in the following diagram:
+
+<p align="center">
+<img src="https://github.com/boylegu/regal-go/blob/main/image/fig01.png?raw=true">
+</p>
+</div>
+
+
+The regal-go provides two policies:
+
+- Combine
+
+Number of machines in each group.
+
+- Schedule
+
+As the first group of A/B, the default is 1.
+You can change this behavior by using the 'schedule' parameter.
+
+>> See the example for more details.
+
+## Feature
+
+1. Provide A/B Test or Gray release policies and dynamic intelligent distribution;
+2. Support multi-version grouping and priority;
+
+
