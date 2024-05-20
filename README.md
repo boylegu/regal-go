@@ -1,7 +1,7 @@
 <div align="center">
 
 <h1 style="border-bottom: none">
-    <b>Regal-Go</b><br />
+    <b style="color: #E940AF">Regal</b><b style="color: #66C9D6">-Go</b><br />
 </h1>
 <p>
 The smart grouping engine for A/B Testing or Gray release by Golang.
@@ -19,7 +19,7 @@ The smart grouping engine for A/B Testing or Gray release by Golang.
 
 English | [简体中文] | [Regal by Python]
 
-## what's Ragal-Go
+## what's Regal-Go
 
 For a simple example, let's say you need to do a staged rollout for a particular version  or several, which could be a bunch of server clusters, as shown in the following diagram:
 

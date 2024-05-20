@@ -2,6 +2,7 @@ package regal
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 )
 
@@ -52,20 +53,10 @@ func (b *baseInfo) initialize() regalList {
 	return l
 }
 
-func (b *baseInfo) calculate(vHost regalList) regalList {
-	var c Converter = InfaceToSliceConverter{}
-
-	baselist := make(regalList, len(vHost))
-	baselistPtr := &baselist
-
-	for hostindex := 0; hostindex < len(vHost); hostindex++ {
-		convertToSlice, _ := c.ConvertByOneSlice(vHost[hostindex][1])
-		hosts := convertToSlice[b.params.schedule:]
-		(*baselistPtr)[hostindex] = []interface{}{vHost[hostindex][0], [][]string{}}
-		initHost := strings.Join(convertToSlice[:b.params.schedule], ", ")
-		recursiveGrouping(hosts, &baselist, b, initHost, hostindex)
+func Reverse[S ~[]E, E any](s S) {
+	for i, j := 0, len(s)-1; i < j; i, j = i+1, j-1 {
+		s[i], s[j] = s[j], s[i]
 	}
-	return *baselistPtr
 }
 
 func Pop(items []string) (string, []string) {
@@ -75,6 +66,35 @@ func Pop(items []string) (string, []string) {
 	items[len(items)-1] = ""
 	items = items[:len(items)-1]
 	return popItem, items
+}
+
+func (b *baseInfo) checkVerKey(listPtr *regalList) (regalList, error) {
+	if len(b.params.priorKey) > 0 {
+
+		sort.SliceStable(*listPtr, func(i, j int) bool {
+			return (*listPtr)[i][0] == b.params.priorKey
+		})
+	}
+	return *listPtr, nil
+}
+
+func (b *baseInfo) calculate(vHost regalList) regalList {
+	var c Converter = InfaceToSliceConverter{}
+
+	baselist := make(regalList, len(vHost))
+	baselistPtr := &baselist
+
+	for hostindex := 0; hostindex < len(vHost); hostindex++ {
+		convertToSlice, _ := c.ConvertByOneSlice(vHost[hostindex][1])
+		hosts := convertToSlice[b.params.schedule:]
+		Reverse(hosts)
+		(*baselistPtr)[hostindex] = []interface{}{vHost[hostindex][0], [][]string{}}
+		initHost := strings.Join(convertToSlice[:b.params.schedule], ", ")
+		recursiveGrouping(hosts, &baselist, b, initHost, hostindex)
+	}
+	b.checkVerKey(baselistPtr)
+
+	return *baselistPtr
 }
 
 func recursiveGrouping(hosts []string, baselist *regalList, b *baseInfo, init_host string, hostindex int) int {
