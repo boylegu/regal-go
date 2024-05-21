@@ -68,7 +68,7 @@ func Pop(items []string) (string, []string) {
 	return popItem, items
 }
 
-func (b *baseInfo) checkVerKey(listPtr *regalList) (regalList, error) {
+func (b *baseInfo) setPrior(listPtr *regalList) (regalList, error) {
 	if len(b.params.priorKey) > 0 {
 
 		sort.SliceStable(*listPtr, func(i, j int) bool {
@@ -92,7 +92,7 @@ func (b *baseInfo) calculate(vHost regalList) regalList {
 		initHost := strings.Join(convertToSlice[:b.params.schedule], ", ")
 		recursiveGrouping(hosts, &baselist, b, initHost, hostindex)
 	}
-	b.checkVerKey(baselistPtr)
+	b.setPrior(baselistPtr)
 
 	return *baselistPtr
 }
