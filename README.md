@@ -111,8 +111,8 @@ Output:
 
 ### Darwin's finches
 
-<p align="center">
-<img src="https://github.com/boylegu/regal-go/blob/main/image/b.jpg?raw=true" width="330" height="300">
+<p align="let">
+<img src="https://github.com/boylegu/regal-go/blob/main/image/b.jpg?raw=true" width="200" height="200">
 </p>
 
 Human creation has never left the inspiration brought to us by nature, and whether it is gray release or A/B testing, nature had excellent solutions thousands of years ago.
