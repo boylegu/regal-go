@@ -26,7 +26,6 @@ For a simple example, let's say you need to do a staged rollout for a particular
 <p align="center">
 <img src="https://github.com/boylegu/regal-go/blob/main/image/fig01.png?raw=true">
 </p>
-</div>
 
 
 The regal-go provides two policies:
@@ -46,5 +45,74 @@ You can change this behavior by using the 'schedule' parameter.
 
 1. Provide A/B Test or Gray release policies and dynamic intelligent distribution;
 2. Support multi-version grouping and priority;
+3. Lightweight and scalable;
+
+## Examples
+
+See  [./example](./example) for example usage.
+
+### Example-1
+```go
+package main
+
+import (
+	"fmt"
+	"github.com/boylegu/regal-go"
+)
+
+func main() {
+	var example1 = [][]string{
+		{"app-test-ver1", "10.1.1.1,10.1.1.2,10.1.1.3,10.1.1.4,10.1.1.5"},
+	}
+	c1 := regal.RegalEngine(example1, regal.WithCombine(2))
+	fmt.Println(c1.Grouping())
+}
+```
+Output:
+
+```shell
+[root@gubaoer-pcx example]# go run main.go
+[[app-test-version1.0 [[10.1.1.1] [10.1.1.2 10.1.1.3] [10.1.1.4 10.1.1.5]]]]
+```
+Based on policy, you will get a data structure. Let's take a look at it:
+
+<p align="center">
+<img src="https://github.com/boylegu/regal-go/blob/main/image/fig02.png?raw=true">
+</p>
+
+### Example-2
+
+```go
+	var example2 = [][]string{
+		{"ver1", "10.1.1.1,10.1.1.2,10.1.1.3,10.1.1.4,10.1.1.5,10.1.1.6"},
+		{"ver2", "10.1.1.1,10.1.1.2,10.1.1.3,10.1.1.4,10.1.1.5"},
+		{"ver3", "10.1.1.1,10.1.1.2,10.1.1.3,10.1.1.4,10.1.1.5"},
+	}
+	c2 := regal.RegalEngine(
+		example2,
+		regal.WithCombine(3),
+		regal.WithSchedule(2),
+		regal.WithPriorKey("ver2"), // Set priority
+	)
+	for _, v := range c2.Grouping() {
+		fmt.Println(v)
+	}
+
+```
+
+Output:
+
+```shell
+[root@gubaoer-pcx example]# go run main.go
+[ver2 [[10.1.1.1, 10.1.1.2] [10.1.1.3 10.1.1.4 10.1.1.5]]]
+[ver1 [[10.1.1.1, 10.1.1.2] [10.1.1.3 10.1.1.4 10.1.1.5] [10.1.1.6]]]
+[ver3 [[10.1.1.1, 10.1.1.2] [10.1.1.3 10.1.1.4 10.1.1.5]]]
+```
+
+### Darwin's finches
 
 
+
+Human creation has never left the inspiration brought to us by nature, and whether it is gray release or A/B testing, nature had excellent solutions thousands of years ago.
+
+> Author: Boyle Gu. Drawing with DeepAI in 2024.
