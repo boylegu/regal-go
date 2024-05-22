@@ -111,8 +111,11 @@ Output:
 
 ### Darwin's finches
 
-
+<p align="center">
+<img src="https://github.com/boylegu/regal-go/blob/main/image/b.jpg?raw=true" width="330" height="300">
+</p>
 
 Human creation has never left the inspiration brought to us by nature, and whether it is gray release or A/B testing, nature had excellent solutions thousands of years ago.
+Therefore, I use 'Darwin's finches' as the prototype to pay tribute to the great nature and Darwin's 《ORIGIN OF SPECIES》.
 
 > Author: Boyle Gu. Drawing with DeepAI in 2024.
