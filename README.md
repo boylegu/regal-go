@@ -17,7 +17,7 @@ The smart grouping engine for A/B Testing or Gray release by Golang.
 </p>
 </div>
 
-English | [简体中文] | [Regal by Python]
+English | [简体中文] | [Regal by Python](https://github.com/boylegu/regal)
 
 ## what's Regal-Go
 
