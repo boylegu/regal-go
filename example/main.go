@@ -2,16 +2,15 @@ package main
 
 import (
 	"fmt"
-	"regal"
+	"github.com/boylegu/regal-go"
 )
 
 func main() {
-	//var example1 = [][]string{
-	//	{"app-test-version1.0", "10.1.1.1,10.1.1.2,10.1.1.3,10.1.1.4,10.1.1.5"},
-	//}
-	//c1 := regal.RegalEngine(
-	//	example1)
-	//fmt.Println(c1.Grouping())
+	var example1 = [][]string{
+		{"app-test-ver1", "10.1.1.1,10.1.1.2,10.1.1.3,10.1.1.4,10.1.1.5"},
+	}
+	c1 := regal.RegalEngine(example1, regal.WithCombine(2))
+	fmt.Println(c1.Grouping())
 
 	var example2 = [][]string{
 		{"ver1", "10.1.1.1,10.1.1.2,10.1.1.3,10.1.1.4,10.1.1.5,10.1.1.6"},
@@ -24,7 +23,7 @@ func main() {
 		regal.WithSchedule(2),
 		regal.WithPriorKey("ver2"),
 	)
-	for k, v := range c2.Grouping() {
-		fmt.Println(k, v)
+	for _, v := range c2.Grouping() {
+		fmt.Println(v)
 	}
 }
