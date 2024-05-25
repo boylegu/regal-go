@@ -4,7 +4,7 @@
     <b style="color: #E940AF">Regal</b><b style="color: #66C9D6">-Go</b><br />
 </h1>
 <p>
-The smart grouping engine for A/B Testing or Gray release by Golang.
+用于"灰度发布"或 A/B Testing的智能分组引擎(Golang版)
 </p>
 
 [![go](https://img.shields.io/badge/Go-1.18+-66C9D6)]()
@@ -17,41 +17,37 @@ The smart grouping engine for A/B Testing or Gray release by Golang.
 </p>
 </div>
 
-English | [简体中文] | [Regal by Python](https://github.com/boylegu/regal)
+English | [简体中文] | [Python版本](https://github.com/boylegu/regal)
 
-## what's Regal-Go
-
-For example, let's say you need to do a staged rollout for a particular version  or several, which could be a bunch of server clusters, as shown in the following diagram:
+## Regal能做什么？
+举个最简单的例子，比如需要针对一个版本进行灰度发布，而这一版本对应的可能是一大堆服务器集群， 如下图:
 
 <p align="center">
-<img src="https://github.com/boylegu/regal-go/blob/main/image/fig01.png?raw=true">
+<img src="https://github.com/boylegu/regal-go/blob/main/image/fig01_cn.png?raw=true">
 </p>
 
+就像图中描述的一样，无论你的服务器是多少，尤其很多中小型组织在进行灰度发布时，通常会面临分流策略在实际的技术或开发中如何去实现；
 
-The regal-go provides two policies:
+因此让Regal引擎直接介入，让它来根据你的策略进行动态地分组分流。 这里提供了两个参数：
 
 - Combine
 
-Number of machines in each group.
+表示每组中的机器数量
 
 - Schedule
 
-As the first group of A/B, the default is 1.
-You can change this behavior by using the 'schedule' parameter.
+作为A/B的第一组，默认为1。 可以通过使用'schedule'参数更改此行为。
 
->> See the example for more details.
+## 功能
 
-## Feature
+1. 提供分组策略，动态分流；
+2. 支持多版本分组以及优先级可配置能力；
 
-1. Provide A/B Test or Gray release policies and dynamic intelligent distribution;
-2. Support multi-version grouping and priority;
-3. Lightweight and scalable;
+## 示例
 
-## Examples
+详细示例可以查看[./example](./example).
 
-See  [./example](./example) for example usage.
-
-### Example-1
+### 示例1
 ```go
 package main
 
@@ -74,10 +70,11 @@ Output:
 [root@gbe-pcx example]# go run main.go
 [[app-test-version1.0 [[10.1.1.1] [10.1.1.2 10.1.1.3] [10.1.1.4 10.1.1.5]]]]
 ```
-Based on policy, you will get a data structure. Let's take a look at it:
+
+根据策略设置，会得到一个数据结构，这里可以观察一下：
 
 <p align="center">
-<img src="https://github.com/boylegu/regal-go/blob/main/image/fig02.png?raw=true">
+<img src="https://github.com/boylegu/regal-go/blob/main/image/fig02_cn.png?raw=true">
 </p>
 
 ### Example-2
@@ -115,7 +112,5 @@ Output:
 <img src="https://github.com/boylegu/regal-go/blob/main/image/b.jpg?raw=true" width="200" height="200">
 </p>
 
-Human creation has never left the inspiration brought to us by nature, and whether it is gray release or A/B testing, nature had excellent solutions thousands of years ago.
-Therefore, I use 'Darwin's finches' as the prototype to pay tribute to the great nature and Darwin's 《ORIGIN OF SPECIES》.
-
+人类的创造从来没有离开大自然带给我们的启发，而无论是灰度发布，还是A/B Testing，早在千年以前，大自然早有绝佳的解决方案。因此我以‘Darwin's finches’作为原型，向伟大的大自然和达尔文《物种起源》致敬。
 > Author: Boyle Gu. Drawing with DeepAI in 2024.
