@@ -17,7 +17,7 @@
 </p>
 </div>
 
-English | [简体中文] | [Python版本](https://github.com/boylegu/regal)
+[English](https://github.com/boylegu/regal-go) | [简体中文] | [Python版本](https://github.com/boylegu/regal)
 
 ## Regal能做什么？
 举个最简单的例子，比如需要针对一个版本进行灰度发布，而这一版本对应的可能是一大堆服务器集群， 如下图:
